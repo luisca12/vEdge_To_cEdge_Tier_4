@@ -47,9 +47,9 @@ Step 4|Follow the steps prompted by the program
 ### Use
 |Steps|Description|
 |-|-|
-Step 1|Double click "Tier2_ImplementationPlan.exe"
+Step 1|Double click "Tier4_ImplementationPlan.exe"
 Step 2|Fill in the information needed
-Step 3|3 Files will be created:<br>- The Implementation Plan<br>- The NDLM XLSX file<br>- The NDLM Tier 2 XLSX file
+Step 3|3 Files will be created:<br>- The Implementation Plan<br>- The NDLM XLSX file<br>- The NDLM Tier 4 XLSX file
 
 ### License
 Permission is hereby granted, free of charge, to any person obtaining a copy
