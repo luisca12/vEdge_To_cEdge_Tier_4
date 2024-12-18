@@ -19,7 +19,7 @@ def Auth(swHostname):
     while True:
         swHostname1 = validateIP(swHostname) # Returns the validated/reachable hostname
         authLog.error(f"User {username} input the following invalid IP: {swHostname}")
-        authLog.debug(traceback.format_exc())
+        authLog.error(traceback.format_exc())
         break
         
     swHostname, username, netDevice = requestLogin(swHostname1)

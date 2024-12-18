@@ -4,6 +4,7 @@ from netmiko.exceptions import NetMikoAuthenticationException, NetMikoTimeoutExc
 import socket
 import getpass
 import csv
+import re
 import traceback
 
 def checkIsDigit(input_str):
@@ -51,18 +52,34 @@ def validateIP(deviceIP):
             authLog.error(f"Was not posible to resolve hostname: {hostname}")
             return None
 
+    # Here is the first func call, validates if it's an IP Address x.x.x.x
     if validIP(deviceIP):
         if checkConnect22(deviceIP):
             authLog.info(f"Device IP {deviceIP} is reachable on Port TCP 22.")
             print(f"INFO: Device IP {deviceIP} is reachable on Port TCP 22.")
-            return deviceIP
+            return True
 
+    # if not IP address, tries to resolve the hostname
     for hostname in hostnamesResolution:
         resolvedIP = resolveHostname(hostname)
         if resolvedIP and checkConnect22(resolvedIP):
             authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
             print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
-            return hostname    
+            return True
+        else:
+            hostname = re.sub("01", "00", hostname)
+            resolvedIP = resolveHostname(hostname)
+            if resolvedIP and checkConnect22(resolvedIP):
+                authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
+                print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
+                return True
+            else:
+                hostname = re.sub("00", "01", hostname)
+                resolvedIP = resolveHostname(hostname)
+                if resolvedIP and checkConnect22(resolvedIP):
+                    authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
+                    print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
+                    return True
 
     hostnameStr = ', '.join(hostnamesResolution)  
     
@@ -73,6 +90,8 @@ def validateIP(deviceIP):
     with open('invalidDestinations.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([hostnameStr])
+    
+    return False
 
 def requestLogin(swHostname):
     while True:

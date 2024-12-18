@@ -68,7 +68,7 @@ def chooseCSV():
 
 def chooseDocx_vEdge(rowText):
     swHostname, username, netDevice = Auth(rowText[13])
-    shHostnameOut, netVlan1101, netVlan1103, shIntDesSDWOut, shIntDesCONOut1, shVlanMgmtIP, shVlanMgmtCIDR, shLoop0Out = shCoreInfo(swHostname, username, netDevice)
+    shHostnameOut, netVlan1105, netVlan1107, shIntDesSDWOut, shIntDesCONOut1, shVlanMgmtIP, shVlanMgmtCIDR, shLoop0Out = shCoreInfo(swHostname, username, netDevice)
 
     print(f"\n","="*76)
     print(f"INFO: Location: {rowText[3]}\n")
@@ -83,16 +83,10 @@ def chooseDocx_vEdge(rowText):
             wordDOC = Document(wordFile)
             authLog.info(f"User chose  the DOCX File path: {wordFile}")
             print(f"INFO: file successfully found: {wordFile}.")
-            serialNumSDW01 = input("Please input the serial number of SDW-01: ")
-            serialNumSDW02 = input("Please input the serial number of SDW-02: ")
             serialNumSDW03 = input("Please input the serial number of SDW-03: ")
             serialNumSDW04 = input("Please input the serial number of SDW-04: ")
-            cEdge1Loop = input("Please input the SDW03 Loopback IP Address: ")
-            cEdge2Loop = input("Please input the SDW04 Loopback IP Address: ")
-            siteNo = input(f"Please input the new Site ID (Old Site ID: {rowText[40]}):")
             city = input("Please input the City: ")
             state = input("Please input the State: ")
-            mplsCircuitID = input("Please input the MPLS Circuit ID:")
             bb1Carrier = input("Please input the bb1-carrier: ")
             bb1Circuitid = input("Please input the bb1-circuitid: ")
             cEdge1TLOC3_Port = input(f"Please input the cedge2-tloc3-port (TenGigabitEthernet0/0/5 or GigabitEthernet0/0/1 for {bb1Carrier} port): ")
@@ -107,33 +101,36 @@ def chooseDocx_vEdge(rowText):
             # print("\nrowText 2:", rowText[2], "rowText 20:", rowText[20])
             # print("After changes:")
             # This one changes the hostname from 01-02 to 03-04
+            # Example: nyny-cen-sdw-02 - ge0/3 - TLOC1 Ext to nyny-cen-sdw-04 - ge0/0/3 - TLOC1 Ext
             rowText[2] = re.sub('01', '03', rowText[2])
-            rowText[20] = re.sub('02', '04', rowText[20])
-            rowText[20] = re.sub('ge0/3', 'ge0/0/3', rowText[20])
+            rowText[18] = re.sub('02', '04', rowText[18])
+            rowText[18] = re.sub('ge0/3', 'ge0/0/3', rowText[18])
             # print("rowText 2:", rowText[2], "rowText 20:", rowText[20])
             # os.system("PAUSE")
 
             # print("\nrowText 47:", rowText[47], "rowText 65:", rowText[65])
             # print("After changes:")
-            rowText[47] = re.sub('02', '04', rowText[47])
-            rowText[65] = re.sub('01', '03', rowText[65])
-            rowText[65] = re.sub('ge0/3', 'ge0/0/3', rowText[65])
+            # This one changes the hostname from 01-02 to 03-04
+            # Example: nyny-cen-sdw-01 - ge0/3 - TLOC1 to nyny-cen-sdw-03 - ge0/0/3 - TLOC1
+            rowText[43] = re.sub('02', '04', rowText[43])
+            rowText[60] = re.sub('01', '03', rowText[60])
+            rowText[60] = re.sub('ge0/3', 'ge0/0/3', rowText[60])
             # print("rowText 47:", rowText[47], "rowText 65:", rowText[65])
             # os.system("PAUSE")
 
             # print("rowText 6:", rowText[6], "rowText 21:", rowText[21], "rowText 32:", rowText[32], \
             #       f"rowText 51:", rowText[51], "rowText 85:", rowText[85],"")
             # print("After changes:")
-            rowText[6] = re.sub(removeCIDR_Patt, '', rowText[6])
-            rowText[21] = re.sub(removeCIDR_Patt, '', rowText[21])
-            rowText[32] = re.sub(removeCIDR_Patt, '', rowText[32])
-            rowText[51] = re.sub(removeCIDR_Patt, '', rowText[51])
-            rowText[85] = re.sub(removeCIDR_Patt, '', rowText[85])
+            # Removes /30
+            rowText[6] = re.sub(removeCIDR_Patt, '', rowText[6]) # This is for cedge1-rtr-ip
+            rowText[19] = re.sub(removeCIDR_Patt, '', rowText[19])
+            rowText[47] = re.sub(removeCIDR_Patt, '', rowText[47]) # This is for cedge2-rtr-ip
+            rowText[61] = re.sub(removeCIDR_Patt, '', rowText[61])
             # print("rowText 6:", rowText[6], "rowText 21:", rowText[21], "rowText 32:", rowText[32], \
             #       f"rowText 51:", rowText[51], "rowText 85:", rowText[85],"")
             # os.system("PAUSE")
 
-            cedge1TLOC3_List = rowText[26] # 
+            cedge1TLOC3_List = rowText[26] # cedge1-tloc3-ip/cedge1-tloc3-cidr
             cedge1TLOC3_STR = ''.join(cedge1TLOC3_List)
             cedge1TLOC3_IP_STR = cedge1TLOC3_STR.split('/')[0]
             cedge1TLOC3_CIDR_STR = cedge1TLOC3_STR.split('/')[1]
@@ -150,6 +147,8 @@ def chooseDocx_vEdge(rowText):
             sw_host = f'{rowText[13]}'
 
             replaceText = {
+                'cedge1-serial-no' : f'{rowText[0]}',
+                'cedge1-loop' : f'{rowText[1]}',  # OK
                 'cedge1-host' : f'{rowText[2]}',  # OK
                 'snmp-location' : f'{rowText[3]}', # OK
                 'cedge1-rtr-ip' : f'{rowText[6]}', # OK
@@ -160,42 +159,39 @@ def chooseDocx_vEdge(rowText):
                 'cedge1-tloc3-ext-ip' : f'{rowText[19]}', # OK
                 'bb1-up-speed' : f'{rowText[22]}', # OK
                 'bb1-down-speed' : f'{rowText[23]}', # OK
-                'latitude' : f'{rowText[37]}',
-                'longitude' : f'{rowText[38]}',
+                'latitude' : f'{rowText[37]}', # OK
+                'longitude' : f'{rowText[38]}', # OK
+                'site-no'	: f'{rowText[40]}',
                 # Here starts the second CSV file #
-                'cedge2-host'	: f'{rowText[47]}',
-                'cedge2-rtr-ip' : f'{rowText[51]}',
-                'cedge2-sw-ip' : f'{rowText[57]}',	
-                'cedge2-tloc3-gate' : f'{rowText[63]}',	
-                'cedge1-host TLOC3 gi0/0/3' : f'{rowText[59]}',
-                'cedge2-tloc3-ext-ip/30' : f'{rowText[60]}',
+                'cedge2-serial-no' : f'{rowText[41]}', # OK
+                'cedge2-loop' : f'{rowText[42]}', # OK
+                'cedge2-host'	: f'{rowText[43]}', # OK
+                'cedge2-rtr-ip' : f'{rowText[47]}', # OK
+                'cedge2-sw-ip' : f'{rowText[53]}', # OK
+                'cedge2-tloc3-ip' : f'{rowText[61]}', # OK
+                'cellular-up-speed' : f'{rowText[67]}', # OK
+                'cellular-down-speed' : f'{rowText[68]}', # OK
             }
 
             # print(json.dumps(replaceText, indent=4))
             # os.system("PAUSE")
 
             stringRegexPatt = {
-                'cedge1-serial-no' : serialNumSDW03New,
-                'cedge2-serial-no' : serialNumSDW04New,
-                'cedge1-loop' : cEdge1Loop,
-                'cedge2-loop' : cEdge2Loop,
-                'site-no'	: siteNo,
                 'city': city,
                 'state': state,
-                'site-code': siteCode,
+                'site-code': siteCode, #nyny or aztuc-lan
                 'sw-mgmt-ip' : shVlanMgmtIP,
-                'mpls-circuitid':  mplsCircuitID,
                 'bb1-carrier': bb1Carrier,
                 'bb1-circuitid': bb1Circuitid,
                 'cedge1-tloc3-port': cEdge1TLOC3_Port,
                 'cedge1-tloc3-ip': cedge1TLOC3_IP_STR,
                 'cedge1-tloc3-mask' : cedge1TLOC3_MASK_STR,
                 'cedge1-tloc3-cidr': cedge1TLOC3_CIDR_STR,
-                'cedge1-lan-net': netVlan1101,
-                'cedge2-lan-net': netVlan1103,
+                'cedge1-lan-net': netVlan1105,
+                'cedge2-lan-net': netVlan1107,
                 'sw-loop': shLoop0Out,
                 'sw-mgmt-cidr': shVlanMgmtCIDR,
-                'sw-cedge1-port': swcEdge1_port,
+                'sw-cedge1-port': swcEdge1_port, 
                 'sw-cedge1-vlan': swcEdge1_vlan,
                 'sw-cedge2-port': swcEdge2_port,
                 'sw-cedge2-vlan': swcEdge2_vlan,
@@ -250,38 +246,26 @@ def chooseDocx_vEdge(rowText):
             os.system("PAUSE")
 
             manualReplaceList = [
-                serialNumSDW01,     #0
-                serialNumSDW02,     #1
-                serialNumSDW03New,  #2
-                serialNumSDW04New,  #3
-                cEdge1Loop,         #4
-                cEdge2Loop,         #5
-                siteNo,             #6
-                city,               #7
-                state,              #8
-                siteCode,           #9
-                shVlanMgmtIP,       #10            
-                swcEdge1_mplsPort,  #11
-                swcEdge2_mplsPort,  #12
-                mplsCircuitID,      #13
-                bb1Carrier,         #14
-                bb1Circuitid,       #15
-                cEdge2TLOC3_Port,   #16
-                cedge2TLOC3_IP_STR, #17
-                cedge2TLOC3_MASK_STR,#18
-                cedge2TLOC3_CIDR_STR,#19
-                netVlan1101,        #20
-                netVlan1103,        #21
-                shLoop0Out,         #22
-                shVlanMgmtCIDR,     #23
-                swcEdge1_port,      #24
-                swcEdge1_vlan,      #25
-                swcEdge2_port,      #26
-                swcEdge2_vlan,      #27
-                shIntDesCONOut1[0], #28
-                shIntDesCONOut1[1], #29
-                sw_host,            #30
-                '1500'              #31
+                serialNumSDW03New,  #1
+                serialNumSDW04New,  #2
+                city,               #3
+                state,              #4
+                siteCode,           #5
+                shVlanMgmtIP,       #6            
+                bb1Carrier,         #7
+                bb1Circuitid,       #8
+                netVlan1105,        #9
+                netVlan1107,        #10
+                shLoop0Out,         #11
+                shVlanMgmtCIDR,     #12
+                swcEdge1_port,      #13
+                swcEdge1_vlan,      #14
+                swcEdge2_port,      #15
+                swcEdge2_vlan,      #16
+                shIntDesCONOut1[0], #17
+                shIntDesCONOut1[1], #18
+                sw_host,            #19
+                '1500'              #20
 
             ]
 
