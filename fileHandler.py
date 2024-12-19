@@ -89,7 +89,7 @@ def chooseDocx_vEdge(rowText):
             state = input("Please input the State: ")
             bb1Carrier = input("Please input the bb1-carrier: ")
             bb1Circuitid = input("Please input the bb1-circuitid: ")
-            cEdge1TLOC3_Port = input(f"Please input the cedge2-tloc3-port (TenGigabitEthernet0/0/5 or GigabitEthernet0/0/1 for {bb1Carrier} port): ")
+            cEdge1TLOC3_Port = input(f"Please input the cedge1-tloc3-port (TenGigabitEthernet0/0/5 or GigabitEthernet0/0/1 for {bb1Carrier} port): ")
             print("=" * 61,"\n\tINFO: Now begins information of the Core Switch")
             print("=" * 61)
             print(f"{shHostnameOut}{shIntDesSDW}\n{shIntDesSDWOut}\n")
@@ -320,8 +320,8 @@ def modNDLMvEdge(rowText, rowText1):
             'cedge1-loop' : f'{rowText1[4]}', # OK
             'cedge2-loop' : f'{rowText1[5]}', # OK
             'snmp-location' : f'{rowText[3]}', # OK
-            'vedge1-loop': f'{rowText[0]}', # OK 
-            'vedge2-loop': f'{rowText[41]}' # OK
+            'vedge1-loop': f'{rowText1[4]}', # OK 
+            'vedge2-loop': f'{rowText1[5]}' # OK
         }
 
         ndlmFile = openpyxl.load_workbook(ndlmPath1)
