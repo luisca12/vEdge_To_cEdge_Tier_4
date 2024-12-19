@@ -24,8 +24,8 @@ ndlmPath2 = "NDLM_Tier4_Template.xlsx"
 
 outputFolder = "Outputs"
 
-sdw03Template = "sdw-03-template.csv"
-sdw04Template = "sdw-04-template.csv"
+sdw03Template = "Tier 4 - sdw-03 Template.csv"
+sdw04Template = "Tier 4 - sdw-04 Template.csv"
 
 returnList = []
 
@@ -79,7 +79,7 @@ def chooseDocx_vEdge(rowText):
 
     while True:
         try:
-            wordFile = "Caremore - Tier II - 8300 - vEdge to cEdge - gold.docx"
+            wordFile = "Tier IV - 8300 - vEdge to cEdge - 1 switch - gold.docx"
             wordDOC = Document(wordFile)
             authLog.info(f"User chose  the DOCX File path: {wordFile}")
             print(f"INFO: file successfully found: {wordFile}.")
@@ -337,7 +337,7 @@ def modNDLMvEdge(rowText, rowText1):
                             authLog.info(f"Replacing '{key}' with '{value}' in the NDLM File 1")
                     cell.value = cellValue
 
-            newNDLMFile = os.path.join(outputFolder, f'{rowText1[9]}-NDLM.xlsx')
+            newNDLMFile = os.path.join(outputFolder, f'{rowText1[9]} - NDLM.xlsx')
             ndlmFile.save(newNDLMFile)
 
     except FileNotFoundError:
@@ -390,7 +390,7 @@ def modNDLM2vEdge(rowText, rowText1):
                             authLog.info(f"Replacing '{key}' with '{value}' in the NDLM File 2")
                     cell.value = cellValue
 
-            newNDLMFile1 = os.path.join(outputFolder, f'{rowText1[9]}-NDLM-Tier2.xlsx')
+            newNDLMFile1 = os.path.join(outputFolder, f'{rowText1[9]} - NDLM - Tier4.xlsx')
             ndlmFile1.save(newNDLMFile1)
 
     except FileNotFoundError:
@@ -411,8 +411,8 @@ def cEdgeTemplatevEdge(rowText, rowText1):
     #     print(f"rowText1[{index}] with string: {item}")
     # os.system("PAUSE")
     
-    newSDW03Template = f'Outputs/{rowText1[9]}-SDW-03-Template.csv'
-    newSDW04Template = f'Outputs/{rowText1[9]}-SDW-04-Template.csv'
+    newSDW03Template = f'Outputs/{rowText1[9]} - SDW-03 Template.csv'
+    newSDW04Template = f'Outputs/{rowText1[9]} - SDW-04 Template.csv'
 
     templateReplacements = {
         'cedge1-loop' : f'{rowText[1]}',  # OK
