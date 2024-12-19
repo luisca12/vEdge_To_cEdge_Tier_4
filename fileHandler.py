@@ -93,8 +93,8 @@ def chooseDocx_vEdge(rowText):
             print("=" * 61,"\n\tINFO: Now begins information of the Core Switch")
             print("=" * 61)
             print(f"{shHostnameOut}{shIntDesSDW}\n{shIntDesSDWOut}\n")
-            swcEdge1_vlan = input("Please input the VLAN for SDW-03, 1101 if possible: ")
-            swcEdge2_vlan = input("Please input the VLAN for SDW-04, 1103 if possible: ")
+            swcEdge1_vlan = input("Please input the VLAN for SDW-03, 1105 if possible: ")
+            swcEdge2_vlan = input("Please input the VLAN for SDW-04, 1107 if possible: ")
             swcEdge1_port = input("Please input the connection to SDW-03 gi0/0/0 in VPN 1 from the switch: ")
             swcEdge2_port = input("Please input the connection to SDW-04 gi0/0/0 in VPN 1 from the switch: ")
             
@@ -145,9 +145,13 @@ def chooseDocx_vEdge(rowText):
             print(f"This is the side code:{siteCode}")
             # os.system("PAUSE")
             sw_host = f'{rowText[13]}'
+            serialNumSDW01 = f'{rowText[0]}'
+            serialNumSDW02 = f'{rowText[41]}'
+            cEdge1Loop = f'{rowText[1]}'
+            cEdge2Loop = f'{rowText[42]}'
+            siteNo = f'{rowText[40]}'
 
             replaceText = {
-                'cedge1-serial-no' : f'{rowText[0]}',
                 'cedge1-loop' : f'{rowText[1]}',  # OK
                 'cedge1-host' : f'{rowText[2]}',  # OK
                 'snmp-location' : f'{rowText[3]}', # OK
@@ -157,13 +161,12 @@ def chooseDocx_vEdge(rowText):
                 'switch-asn' : f'{rowText[14]}', # OK
                 'cedge1-tloc3-gate' : f'{rowText[16]}', # OK
                 'cedge1-tloc3-ext-ip' : f'{rowText[19]}', # OK
-                'bb1-up-speed' : f'{rowText[22]}', # OK
-                'bb1-down-speed' : f'{rowText[23]}', # OK
+                'bb1-up-speed' : f'{rowText[34]}', # OK
+                'bb1-down-speed' : f'{rowText[35]}', # OK
                 'latitude' : f'{rowText[37]}', # OK
                 'longitude' : f'{rowText[38]}', # OK
                 'site-no'	: f'{rowText[40]}',
                 # Here starts the second CSV file #
-                'cedge2-serial-no' : f'{rowText[41]}', # OK
                 'cedge2-loop' : f'{rowText[42]}', # OK
                 'cedge2-host'	: f'{rowText[43]}', # OK
                 'cedge2-rtr-ip' : f'{rowText[47]}', # OK
@@ -177,28 +180,30 @@ def chooseDocx_vEdge(rowText):
             # os.system("PAUSE")
 
             stringRegexPatt = {
-                'city': city,
-                'state': state,
+                'city': city, # OK
+                'state': state, # OK
                 'site-code': siteCode, #nyny or aztuc-lan
-                'sw-mgmt-ip' : shVlanMgmtIP,
-                'bb1-carrier': bb1Carrier,
-                'bb1-circuitid': bb1Circuitid,
-                'cedge1-tloc3-port': cEdge1TLOC3_Port,
-                'cedge1-tloc3-ip': cedge1TLOC3_IP_STR,
-                'cedge1-tloc3-mask' : cedge1TLOC3_MASK_STR,
-                'cedge1-tloc3-cidr': cedge1TLOC3_CIDR_STR,
-                'cedge1-lan-net': netVlan1105,
-                'cedge2-lan-net': netVlan1107,
-                'sw-loop': shLoop0Out,
-                'sw-mgmt-cidr': shVlanMgmtCIDR,
-                'sw-cedge1-port': swcEdge1_port, 
-                'sw-cedge1-vlan': swcEdge1_vlan,
-                'sw-cedge2-port': swcEdge2_port,
-                'sw-cedge2-vlan': swcEdge2_vlan,
-                'sw-remote-con-net1': shIntDesCONOut1[0],
-                'sw-remote-con-net2': shIntDesCONOut1[1],
-                'sw-host' : sw_host,
-                'sw-mgmt-vlan' : '1500'
+                'sw-mgmt-ip' : shVlanMgmtIP, # OK
+                'bb1-carrier': bb1Carrier, # OK
+                'bb1-circuitid': bb1Circuitid, # OK
+                'cedge1-tloc3-port': cEdge1TLOC3_Port, # OK
+                'cedge1-tloc3-ip': cedge1TLOC3_IP_STR, # OK
+                'cedge1-tloc3-mask' : cedge1TLOC3_MASK_STR, # OK
+                'cedge1-tloc3-cidr': cedge1TLOC3_CIDR_STR, # OK
+                'cedge1-lan-net': netVlan1105, # OK
+                'cedge2-lan-net': netVlan1107, # OK
+                'sw-loop': shLoop0Out, # OK
+                'sw-mgmt-cidr': shVlanMgmtCIDR, # OK
+                'sw-cedge1-port': swcEdge1_port,  # OK
+                'sw-cedge1-vlan': swcEdge1_vlan, # OK
+                'sw-cedge2-port': swcEdge2_port, # OK
+                'sw-cedge2-vlan': swcEdge2_vlan, # OK
+                'sw-remote-con-net1': shIntDesCONOut1[0], # OK
+                'sw-remote-con-net2': shIntDesCONOut1[1], # OK
+                'sw-host' : sw_host, # OK
+                'sw-mgmt-vlan' : '1500', # OK
+                'cedge1-serial-no' : serialNumSDW03New, # OK
+                'cedge2-serial-no' : serialNumSDW04New # OK
             }
 
             manualReplacements = {re.compile(r'\b{}\b'.format(pattern), re.IGNORECASE): value for pattern, value in stringRegexPatt.items()}
@@ -238,34 +243,49 @@ def chooseDocx_vEdge(rowText):
                                         authLog.info(f"Replacing in Table: '{placeholder.pattern}' with '{replacement}'")
                                         paragraph.text = placeholder.sub(replacement, paragraph.text)
 
-            newWordDoc = f"Outputs/{siteCode}_ImplementationPlan.docx"
+            newWordDoc = f"Outputs/{siteCode} - vEdge to cEdge Implementation Plan.docx"
             wordDOC.save(newWordDoc)
             authLog.info(f"Replacements made successfully in DOCX file and saved as: {newWordDoc}")
             print(f"INFO: Replacements made successfully in DOCX file and saved as: {newWordDoc}")
             
             os.system("PAUSE")
 
+            ignored = "EMPTY"
+
             manualReplaceList = [
-                serialNumSDW03New,  #1
-                serialNumSDW04New,  #2
-                city,               #3
-                state,              #4
-                siteCode,           #5
-                shVlanMgmtIP,       #6            
-                bb1Carrier,         #7
-                bb1Circuitid,       #8
-                netVlan1105,        #9
-                netVlan1107,        #10
-                shLoop0Out,         #11
-                shVlanMgmtCIDR,     #12
-                swcEdge1_port,      #13
-                swcEdge1_vlan,      #14
-                swcEdge2_port,      #15
-                swcEdge2_vlan,      #16
-                shIntDesCONOut1[0], #17
-                shIntDesCONOut1[1], #18
-                sw_host,            #19
-                '1500'              #20
+                serialNumSDW01,     #0
+                serialNumSDW02,     #1
+                serialNumSDW03New,  #2
+                serialNumSDW04New,  #3
+                cEdge1Loop,         #4
+                cEdge2Loop,         #5
+                siteNo,             #6
+                city,               #7
+                state,              #8
+                siteCode,           #9
+                shVlanMgmtIP,       #10            
+                ignored,            #11
+                ignored,            #12
+                ignored,            #13
+                bb1Carrier,         #14
+                bb1Circuitid,       #15
+                cEdge1TLOC3_Port,   #16
+                cedge1TLOC3_IP_STR, #17
+                cedge1TLOC3_MASK_STR,#18
+                cedge1TLOC3_CIDR_STR,#19
+                netVlan1105,        #20
+                netVlan1107,        #21
+                shLoop0Out,         #22
+                shVlanMgmtCIDR,     #23
+                swcEdge1_port,      #24
+                swcEdge1_vlan,      #25
+                swcEdge2_port,      #26
+                swcEdge2_vlan,      #27
+                ignored,            #28
+                shIntDesCONOut1[0], #29
+                shIntDesCONOut1[1], #30
+                sw_host,            #31
+                '1500'              #32
 
             ]
 
@@ -292,16 +312,16 @@ def modNDLMvEdge(rowText, rowText1):
         cedge2_serial_no = f'{rowText1[3]}'
         cedge2_serial_no = re.sub(PID_SDW04, '', cedge2_serial_no)
         replaceText = {
-            'site-code' : f'{rowText1[9]}',
-            'vedge1-serial-no' : f'{rowText1[0]}',
-            'vedge2-serial-no' : f'{rowText1[1]}',
-            'cedge1-serial-no' : cedge1_serial_no,
-            'cedge2-serial-no' : cedge2_serial_no,
-            'cedge1-loop' : f'{rowText1[4]}',
-            'cedge2-loop' : f'{rowText1[5]}',
-            'snmp-location' : f'{rowText[3]}',
-            'vedge1-loop': f'{rowText[1]}',
-            'vedge2-loop': f'{rowText[46]}'
+            'site-code' : f'{rowText1[9]}', # OK
+            'vedge1-serial-no' : f'{rowText1[0]}', # OK
+            'vedge2-serial-no' : f'{rowText1[1]}', # OK
+            'cedge1-serial-no' : cedge1_serial_no, # OK
+            'cedge2-serial-no' : cedge2_serial_no, # OK
+            'cedge1-loop' : f'{rowText1[4]}', # OK
+            'cedge2-loop' : f'{rowText1[5]}', # OK
+            'snmp-location' : f'{rowText[3]}', # OK
+            'vedge1-loop': f'{rowText[0]}', # OK 
+            'vedge2-loop': f'{rowText[41]}' # OK
         }
 
         ndlmFile = openpyxl.load_workbook(ndlmPath1)
@@ -339,26 +359,22 @@ def modNDLM2vEdge(rowText, rowText1):
     try:
 
         replaceText = {
-            'site-code' : f'{rowText1[9]}',
-            'cedge1-loop' : f'{rowText1[4]}',
-            'cedge2-loop' : f'{rowText1[5]}',
-            'snmp-location' : f'{rowText[3]}',
-            'city': f'{rowText1[7]}',
-            'state': f'{rowText1[8]}',
-            'site-no': f'{rowText1[6]}',
-            'cedge1-host': f'{rowText[2]}',
-            'cedge2-host': f'{rowText[47]}',
-            'sw-host' : f'{rowText1[31]}',
-            'sw-mpls-port' : f'{rowText1[28]}',
-            'cedge2-tloc3-port': f'{rowText1[16]}',
-            'sw-cedge1-port' : f'{rowText1[24]}',
-            'sw-cedge2-port' : f'{rowText1[26]}',
-            'sw-cedge1-mpls-port' : f'{rowText1[11]}',
-            'sw-cedge2-mpls-port' : f'{rowText1[12]}',
-            'mpls-speed' : f'{rowText[38]}',
-            'bb1-up-speed' : f'{rowText[82]}',
-            'bb1-down-speed' : f'{rowText[82]}',
-            'bb1-carrier' : f'{rowText1[14]}'
+            'site-code' : f'{rowText1[9]}', # OK
+            'cedge1-loop' : f'{rowText1[4]}', # OK
+            'cedge2-loop' : f'{rowText1[5]}', # OK
+            'snmp-location' : f'{rowText[3]}', # OK
+            'site-no': f'{rowText1[6]}', # OK
+            'city': f'{rowText1[7]}', # OK
+            'state': f'{rowText1[8]}', # OK
+            'cedge1-host': f'{rowText[2]}', # OK
+            'cedge2-host': f'{rowText[43]}', # OK
+            'sw-host' : f'{rowText1[31]}', # OK
+            'cedge1-tloc3-port': f'{rowText1[16]}', # OK
+            'sw-cedge1-port' : f'{rowText1[24]}', # OK
+            'sw-cedge2-port' : f'{rowText1[26]}', # OK
+            'bb1-up-speed' : f'{rowText[34]}',  # OK
+            'bb1-down-speed' : f'{rowText[35]}',  # OK
+            'bb1-carrier' : f'{rowText1[14]}'  # OK
         }
 
         ndlmFile1 = openpyxl.load_workbook(ndlmPath2)
@@ -398,122 +414,57 @@ def cEdgeTemplatevEdge(rowText, rowText1):
     newSDW03Template = f'Outputs/{rowText1[9]}-SDW-03-Template.csv'
     newSDW04Template = f'Outputs/{rowText1[9]}-SDW-04-Template.csv'
 
-    sdw03Replacements = {
-        'cedge1-host' : f'{rowText[2]}',
-        'snmp-location' : f'{rowText[3]}',
-        'cedge1-rtr-ip' : f'{rowText[6]}',
-        'cEdge-asn' : f'{rowText[9]}',
-        'cedge1-sw-ip' : f'{rowText[12]}',
-        'switch-asn' : f'{rowText[14]}',
-        'mpls-pe-ip' : f'{rowText[17]}',
-        'cedge2-tloc3-ext-ip' : f'{rowText[18]}',
-        'cedge2-host - gi0/0/3 - TLOC3' : f'{rowText[20]}',
-        'cedge1-tloc3-ip'	: f'{rowText[21]}',
-        'mpls-ce1-ip' : f'{rowText[32]}',
-        'mpls-speed' : f'{rowText[38]}',
-        'latitude' : f'{rowText[41]}',
-        'longitude' : f'{rowText[42]}',
+    templateReplacements = {
+        'cedge1-loop' : f'{rowText[1]}',  # OK
+        'cedge1-host' : f'{rowText[2]}',  # OK
+        'snmp-location' : f'{rowText[3]}', # OK
+        'cedge1-rtr-ip' : f'{rowText[6]}', # OK
+        'cEdge-asn' : f'{rowText[9]}', # OK
+        'cedge1-sw-ip' : f'{rowText[12]}', # OK
+        'switch-asn' : f'{rowText[14]}', # OK
+        'cedge1-tloc3-gate' : f'{rowText[16]}', # OK
+        'cedge1-tloc3-ext-ip' : f'{rowText[19]}', # OK
+        'bb1-up-speed' : f'{rowText[34]}', # OK
+        'bb1-down-speed' : f'{rowText[35]}', # OK
+        'latitude' : f'{rowText[37]}', # OK
+        'longitude' : f'{rowText[38]}', # OK
+        'site-no'	: f'{rowText[40]}',
         # Here starts the second CSV file #
-        'cedge2-host'	: f'{rowText[47]}',
-        'bb1-down-speed' : f'{rowText[82]}',
-        'cedge2-rtr-ip' : f'{rowText[51]}',
-        'cedge2-sw-ip' : f'{rowText[57]}',	
-        'cedge2-tloc3-gate' : f'{rowText[63]}',	
-        'cedge1-host TLOC3 gi0/0/3' : f'{rowText[59]}',
-        'cedge2-tloc3-ext-ip/30' : f'{rowText[60]}',
-        'bb1-up-speed' : f'{rowText[82]}',	
-        'mpls-ce2-ip'	: f'{rowText[85]}',
+        'cedge2-loop' : f'{rowText[42]}', # OK
+        'cedge2-host'	: f'{rowText[43]}', # OK
+        'cedge2-rtr-ip' : f'{rowText[47]}', # OK
+        'cedge2-sw-ip' : f'{rowText[53]}', # OK
+        'cedge2-tloc3-ip' : f'{rowText[61]}', # OK
+        'cellular-up-speed' : f'{rowText[67]}', # OK
+        'cellular-down-speed' : f'{rowText[68]}', # OK
 
-        'cedge1-serial-no' : rowText1[2],
-        'cedge2-serial-no' : rowText1[3],
-        'cedge1-loop' : rowText1[4],
-        'cedge2-loop' : rowText1[5],
-        'site-no'	: rowText1[6],
-        'city': rowText1[7],
-        'state': rowText1[8],
-        'site-code': rowText1[9],
-        'sw-mgmt-ip' : rowText1[10],
-        'sw-cEdge1-mpls-port': rowText[11],
-        'sw-cEdge2-mpls-port': rowText1[12],
-        'mpls-circuitid':  rowText1[13],
-        'bb1-carrier': rowText1[14],
-        'bb1-circuitid': rowText1[15],
-        'cedge2-tloc3-port': rowText1[16],
-        'cedge2-tloc3-ip': rowText1[17],
-        'cedge2-tloc3-mask' : rowText1[18],
-        'cedge2-tloc3-cidr': rowText1[19],
-        'cedge1-lan-net': rowText1[20],
-        'cedge2-lan-net': rowText1[21],
-        'sw-loop': rowText1[22],
-        'sw-mgmt-cidr': rowText1[23],
-        'sw-cedge1-port': rowText1[24],
-        'sw-cedge1-vlan': rowText1[25],
-        'sw-cedge2-port': rowText1[26],
-        'sw-cedge2-vlan': rowText1[27],
-        'sw-mpls-port': rowText1[28],
-        'sw-remote-con-net1': rowText1[29],
-        'sw-remote-con-net2': rowText1[30],
-        'sw-host' : rowText1[31],
-        'sw-mgmt-vlan' : rowText1[32] 
-    }
-
-    sdw04Replacements = {
-        'cedge1-host' : f'{rowText[2]}',
-        'snmp-location' : f'{rowText[3]}',
-        'cedge1-rtr-ip' : f'{rowText[6]}',
-        'cEdge-asn' : f'{rowText[9]}',
-        'cedge1-sw-ip' : f'{rowText[12]}',
-        'switch-asn' : f'{rowText[14]}',
-        'mpls-pe-ip' : f'{rowText[17]}',
-        'cedge2-tloc3-ext-ip' : f'{rowText[18]}',
-        'cedge2-host - gi0/0/3 - TLOC3' : f'{rowText[20]}',
-        'cedge1-tloc3-ip'	: f'{rowText[21]}',
-        'mpls-ce1-ip' : f'{rowText[32]}',
-        'mpls-speed' : f'{rowText[38]}',
-        'latitude' : f'{rowText[41]}',
-        'longitude' : f'{rowText[42]}',
-        # Here starts the second CSV file #
-        'cedge2-host'	: f'{rowText[47]}',
-        'bb1-down-speed' : f'{rowText[82]}',
-        'cedge2-rtr-ip' : f'{rowText[51]}',
-        'cedge2-sw-ip' : f'{rowText[57]}',	
-        'cedge2-tloc3-gate' : f'{rowText[63]}',	
-        'cedge1-host TLOC3 gi0/0/3' : f'{rowText[59]}',
-        'cedge2-tloc3-ext-ip/30' : f'{rowText[60]}',
-        'bb1-up-speed' : f'{rowText[82]}',	
-        'mpls-ce2-ip'	: f'{rowText[85]}',
-        
-        'cedge1-serial-no' : rowText1[2],
-        'cedge2-serial-no' : rowText1[3],
-        'cedge1-loop' : rowText1[4],
-        'cedge2-loop' : rowText1[5],
-        'site-no'	: rowText1[6],
-        'city': rowText1[7],
-        'state': rowText1[8],
-        'site-code': rowText1[9],
-        'sw-mgmt-ip' : rowText1[10],
-        'sw-cEdge1-mpls-port': rowText[11],
-        'sw-cEdge2-mpls-port': rowText1[12],
-        'mpls-circuitid':  rowText1[13],
-        'bb1-carrier': rowText1[14],
-        'bb1-circuitid': rowText1[15],
-        'cedge2-tloc3-port': rowText1[16],
-        'cedge2-tloc3-ip': rowText1[17],
-        'cedge2-tloc3-mask' : rowText1[18],
-        'cedge2-tloc3-cidr': rowText1[19],
-        'cedge1-lan-net': rowText1[20],
-        'cedge2-lan-net': rowText1[21],
-        'sw-loop': rowText1[22],
-        'sw-mgmt-cidr': rowText1[23],
-        'sw-cedge1-port': rowText1[24],
-        'sw-cedge1-vlan': rowText1[25],
-        'sw-cedge2-port': rowText1[26],
-        'sw-cedge2-vlan': rowText1[27],
-        'sw-mpls-port': rowText1[28],
-        'sw-remote-con-net1': rowText1[29],
-        'sw-remote-con-net2': rowText1[30],
-        'sw-host' : rowText1[31],
-        'sw-mgmt-vlan' : rowText1[32] 
+        'cedge1-serial-no' : rowText1[2], # OK
+        'cedge2-serial-no' : rowText1[3], # OK
+        'cedge1-loop' : rowText1[4], # OK
+        'cedge2-loop' : rowText1[5], # OK
+        'site-no'	: rowText1[6], # OK
+        'city': rowText1[7], # OK 
+        'state': rowText1[8], # OK
+        'site-code': rowText1[9], # OK
+        'sw-mgmt-ip' : rowText1[10], # OK
+        'bb1-carrier': rowText1[14], # OK
+        'bb1-circuitid': rowText1[15], # OK
+        'cedge1-tloc3-port': rowText1[16], # OK
+        'cedge1-tloc3-ip': rowText1[17], # OK
+        'cedge1-tloc3-mask' : rowText1[18], # OK
+        'cedge1-tloc3-cidr': rowText1[19], # OK
+        'cedge1-lan-net': rowText1[20], # OK
+        'cedge2-lan-net': rowText1[21], # OK
+        'sw-loop': rowText1[22], # OK
+        'sw-mgmt-cidr': rowText1[23], # OK
+        'sw-cedge1-port': rowText1[24], # OK
+        'sw-cedge1-vlan': rowText1[25], # OK
+        'sw-cedge2-port': rowText1[26], # OK
+        'sw-cedge2-vlan': rowText1[27], # OK
+        'sw-remote-con-net1': rowText1[29], # OK
+        'sw-remote-con-net2': rowText1[30], # OK
+        'sw-host' : rowText1[31], # OK
+        'sw-mgmt-vlan' : rowText1[32] # OK
     }
 
     try:
@@ -530,7 +481,7 @@ def cEdgeTemplatevEdge(rowText, rowText1):
                 for index, cell in enumerate(secondRow):
                     cellValue = str(cell).strip()
                     originalCellValue = cellValue
-                    for key, value in sdw03Replacements.items():
+                    for key, value in templateReplacements.items():
                         if key.lower() in cellValue.lower():
                             cellValue = re.sub(re.escape(key), value, cellValue, flags=re.IGNORECASE)
                             authLog.info(f"Replacing '{key}' with '{value}' in row 2, cell {index + 1}:" \
@@ -556,7 +507,7 @@ def cEdgeTemplatevEdge(rowText, rowText1):
                     cellValue1 = str(cell1).strip()
                     originalCellValue1 = cellValue1
 
-                    for key1, value1 in sdw04Replacements.items():
+                    for key1, value1 in templateReplacements.items():
                         if key1.lower() in cellValue1.lower():
                             cellValue1 = re.sub(re.escape(key1), value1, cellValue1, flags=re.IGNORECASE)
                             authLog.info(f"Replacing '{key1}' with '{value1}' in row 2, cell {index1 + 1}:" \

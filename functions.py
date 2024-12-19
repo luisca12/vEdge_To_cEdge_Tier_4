@@ -65,21 +65,21 @@ def validateIP(deviceIP):
         if resolvedIP and checkConnect22(resolvedIP):
             authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
             print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
-            return True
-        else:
+            return hostname
+        elif "00" in hostname:
+            hostname = re.sub("00", "01", hostname)
+            resolvedIP = resolveHostname(hostname)
+            if resolvedIP and checkConnect22(resolvedIP):
+                authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
+                print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
+                return hostname
+        elif "01" in hostname:
             hostname = re.sub("01", "00", hostname)
             resolvedIP = resolveHostname(hostname)
             if resolvedIP and checkConnect22(resolvedIP):
                 authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
                 print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
-                return True
-            else:
-                hostname = re.sub("00", "01", hostname)
-                resolvedIP = resolveHostname(hostname)
-                if resolvedIP and checkConnect22(resolvedIP):
-                    authLog.info(f"Device IP {hostname} is reachable on Port TCP 22.")
-                    print(f"INFO: Device IP {hostname} is reachable on Port TCP 22.")
-                    return True
+                return hostname
 
     hostnameStr = ', '.join(hostnamesResolution)  
     
