@@ -6,7 +6,7 @@ from utils import mkdir
 def main():  
     mkdir()  
     from log import authLog
-    from fileHandler import chooseCSV, chooseDocx_ISR, modNDLMISR, modNDLM2ISR, cEdgeTemplateISR, chooseDocx_vEdge, modNDLMvEdge, modNDLM2vEdge, cEdgeTemplatevEdge
+    from fileHandler import chooseCSV, chooseDocx_vEdge, modNDLMvEdge, modNDLM2vEdge, cEdgeTemplatevEdge
     from functions import checkIsDigit
     while True:
         os.system("CLS")
@@ -25,13 +25,8 @@ def main():
                 break
 
             if selection == "2":
-                csvValues = chooseCSV()
-                docxValues = chooseDocx_ISR(csvValues)
-                rowText = docxValues['rowText']
-                rowText1 = docxValues['rowText1']
-                modNDLMISR(rowText, rowText1)
-                modNDLM2ISR(rowText, rowText1)
-                cEdgeTemplateISR(rowText, rowText1)
+                print(f"There are no Tier 4 using ISR platform, try again. :)")
+                os.system("PAUSE")
                 break
 
         else:
@@ -54,13 +49,8 @@ def main():
                 cEdgeTemplatevEdge(rowText, rowText1)
 
             if selection == "2":
-                csvValues = chooseCSV()
-                docxValues = chooseDocx_ISR(csvValues)
-                rowText = docxValues['rowText']
-                rowText1 = docxValues['rowText1']
-                modNDLMISR(rowText, rowText1)
-                modNDLM2ISR(rowText, rowText1)
-                cEdgeTemplateISR(rowText, rowText1)
+                print(f"There are no Tier 4 using ISR platform, try again. :)")
+                os.system("PAUSE")
 
             if selection == "3":
                 break
